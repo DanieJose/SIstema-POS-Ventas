@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -28,13 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     // Evaluamos la respuesta del servidor
-    if (error == null) {
-      // Si fue un éxito
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('¡Éxito! Bienvenida al Sistema POS'), backgroundColor: Colors.green),
+if (error == null) {
+      // ¡Éxito! Hacemos un "salto" a la pantalla del Panel de Control
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardScreen()),
       );
     } else {
-      // Si hubo error (ej. contraseña mala o servidor apagado)
+      // Si falla, mostramos la alerta roja
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error), backgroundColor: Colors.red),
       );

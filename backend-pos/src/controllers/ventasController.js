@@ -131,12 +131,18 @@ exports.crearVenta = async (req, res) => {
         let subtotalVenta = 0;
         
         for (let item of detalles) {
+            const varianteId = item.variante_id ?? item.id_producto ?? item.id_articulo ?? item.id;
+            if (!varianteId) {
+                throw new Error('Detalle inválido: falta variante_id (o id de artículo).');
+            }
+
             // Consultamos cuánto cuesta y cuánto stock hay de cada artículo
-            const [varianteBD] = await connection.query('SELECT precio_venta, stock_actual FROM variantes WHERE id = ?', [item.variante_id]);
+            const [varianteBD] = await connection.query('SELECT precio_venta, stock_actual FROM variantes WHERE id = ?', [varianteId]);
             
-            if (varianteBD.length === 0) throw new Error(`El artículo con ID ${item.variante_id} no existe.`);
-            if (varianteBD[0].stock_actual < item.cantidad) throw new Error(`Stock insuficiente para el artículo ID ${item.variante_id}.`);
+            if (varianteBD.length === 0) throw new Error(`El artículo con ID ${varianteId} no existe.`);
+            if (varianteBD[0].stock_actual < item.cantidad) throw new Error(`Stock insuficiente para el artículo ID ${varianteId}.`);
             
+            item.variante_id = varianteId;
             item.precio_unitario = varianteBD[0].precio_venta;
             item.subtotal_linea = item.precio_unitario * item.cantidad;
             subtotalVenta += item.subtotal_linea;
