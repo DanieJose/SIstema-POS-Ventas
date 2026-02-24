@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api_config.dart';
 
 class DashboardService {
-  // ¡Usa la misma IP que pusiste en tu auth_service.dart!
-  static const String baseUrl = 'http://192.168.0.5:3000/api';
-
   Future<Map<String, dynamic>?> obtenerResumen() async {
     try {
       // 1. Sacamos la "llave maestra" (Token) de la bóveda del celular
@@ -16,10 +14,10 @@ class DashboardService {
 
       // 2. Tocamos la puerta del servidor mostrando el Token
       final response = await http.get(
-        Uri.parse('$baseUrl/reportes/dashboard'),
+        Uri.parse('${ApiConfig.baseUrl}/reportes/dashboard'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token', 
+          'Authorization': 'Bearer $token',
         },
       );
 

@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     // Evaluamos la respuesta del servidor
-if (error == null) {
+    if (error == null) {
       // ¡Éxito! Hacemos un "salto" a la pantalla del Panel de Control
       Navigator.pushReplacement(
         context,
@@ -49,51 +49,71 @@ if (error == null) {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Icon(Icons.storefront, size: 100, color: Colors.blue[800]),
-            SizedBox(height: 20),
-            Text(
-              'Sistema POS',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 40),
-            TextField(
-              controller: _correoController,
-              decoration: InputDecoration(
-                labelText: 'Usuario',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
-              ),
-              keyboardType: TextInputType.text,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
-              ),
-              obscureText: true, // Oculta la contraseña con asteriscos
-            ),
-            SizedBox(height: 30),
-            _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : ElevatedButton(
-                    onPressed: _iniciarSesion,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.blue[800],
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - 48,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Icon(Icons.storefront, size: 100, color: Colors.blue[800]),
+                    SizedBox(height: 20),
+                    Text(
+                      'Sistema POS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    child: Text('INGRESAR', style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
-          ],
+                    SizedBox(height: 40),
+                    TextField(
+                      controller: _correoController,
+                      decoration: InputDecoration(
+                        labelText: 'Usuario',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      keyboardType: TextInputType.text,
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Contraseña',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      obscureText: true, // Oculta la contraseña con asteriscos
+                    ),
+                    SizedBox(height: 30),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            onPressed: _iniciarSesion,
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: Colors.blue[800],
+                            ),
+                            child: Text(
+                              'INGRESAR',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

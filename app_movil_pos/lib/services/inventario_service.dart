@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api_config.dart';
 
 class InventarioService {
-  // ¡Mantén la misma IP que te ha funcionado!
-  static const String baseUrl = 'http://192.168.0.5:3000/api';
-
   Future<List<dynamic>> obtenerInventario() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -15,7 +13,7 @@ class InventarioService {
 
       // Llamamos a la ruta GET /api/inventario que hiciste en Node.js
       final response = await http.get(
-        Uri.parse('$baseUrl/inventario'),
+        Uri.parse('${ApiConfig.baseUrl}/inventario'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -28,7 +26,8 @@ class InventarioService {
         if (data is List) return data;
         if (data is Map) {
           for (var value in data.values) {
-            if (value is List) return value; // Busca la lista de productos dentro del JSON
+            if (value is List)
+              return value; // Busca la lista de productos dentro del JSON
           }
         }
         return [];

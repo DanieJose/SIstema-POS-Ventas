@@ -1,19 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api_config.dart';
 
 class AuthService {
-  // ¡Aquí va la IP de tu computadora que descubrimos antes!
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
   Future<String?> login(String usuario, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login'),
+        Uri.parse('${ApiConfig.baseUrl}/auth/login'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'usuario': usuario,
-          'password': password
-        }),
+        body: jsonEncode({'usuario': usuario, 'password': password}),
       );
 
       if (response.statusCode == 200) {
@@ -23,7 +19,7 @@ class AuthService {
         // Guardamos el token de seguridad en la bóveda del celular
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt_token', token);
-        
+
         return null; // Retornar "null" significa que no hubo ningún error
       } else {
         final data = jsonDecode(response.body);
